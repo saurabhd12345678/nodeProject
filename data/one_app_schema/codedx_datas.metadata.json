@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"},{"v":{"$numberInt":"2"},"unique":true,"key":{"pipeline_key":{"$numberInt":"1"}},"name":"pipeline_key_1","background":true}],"uuid":"732403be08424cf5b0c118d9b80c17b6","collectionName":"codedx_datas"}

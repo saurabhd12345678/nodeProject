@@ -1,0 +1,1407 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "LTI Canvas Devops Backend",
+    "description": "LTI Canvas Devops API Documentation"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "host": "localhost:3000",
+  "basePath": "/api",
+  "tags": [
+    {
+      "name": "Settings",
+      "description": "Application Settings APIs"
+    },
+    {
+      "name": "User Login Register",
+      "description": "User Login and Registration"
+    },
+    {
+      "name": "Home",
+      "description": "Home Screen Apis"
+    },
+    {
+      "name": "Pipelines",
+      "description": "Pipeline Screen Apis"
+    },
+    {
+      "name": "Templates",
+      "description": "Template Screen Apis"
+    }
+  ],
+  "paths": {
+    "/settings/get_tool_categories": {
+      "get": {
+        "tags": [
+          "Settings"
+        ],
+        "summary": "Get tool categories by application",
+        "description": "Returns tool categories based on application key",
+        "parameters": [
+          {
+            "name": "application_key",
+            "in": "query",
+            "description": "Application Key of the application",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of Tool Categories",
+            "schema": {
+              "type": "array",
+              "items": {
+                "properties": {
+                  "category_name": {
+                    "type": "string",
+                    "example": "planning"
+                  },
+                  "instance_count": {
+                    "type": "number",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Input Parameter"
+          },
+          "401": {
+            "description": "The user is unauthorized to make this request"
+          },
+          "404": {
+            "description": "API not found"
+          }
+        }
+      }
+    },
+    "/settings/get_tools": {
+      "get": {
+        "tags": [
+          "Settings"
+        ],
+        "summary": "Get tools by application and tool category",
+        "description": "Returns tools based on application key and tool category",
+        "parameters": [
+          {
+            "name": "application_key",
+            "in": "query",
+            "description": "Application Key of the application",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "tool_category",
+            "in": "query",
+            "description": "Tool Category",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of Tools",
+            "schema": {
+              "type": "array",
+              "items": {
+                "properties": {
+                  "tool_url": {
+                    "type": "string",
+                    "example": "http://3.87.19.19:8081"
+                  },
+                  "tool_instance_name": {
+                    "type": "string",
+                    "example": "Public Jira"
+                  },
+                  "tool_name": {
+                    "type": "string",
+                    "example": "JIRA"
+                  },
+                  "tool_version": {
+                    "type": "string",
+                    "example": "v1"
+                  },
+                  "proxy_required": {
+                    "type": "boolean",
+                    "example": false
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Input Parameter"
+          },
+          "401": {
+            "description": "The user is unauthorized to make this request"
+          },
+          "404": {
+            "description": "API not found"
+          }
+        }
+      }
+    },
+    "/settings/sync_tool_projects": {
+      "get": {
+        "tags": [
+          "Settings"
+        ],
+        "summary": "Synchronize tool projects",
+        "description": "Returns response based on synchronization status",
+        "parameters": [
+          {
+            "name": "application_key",
+            "in": "query",
+            "description": "Application Key of the application",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "tool_category",
+            "in": "query",
+            "description": "Tool Category",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "tool_instance_name",
+            "in": "query",
+            "description": "Tool Name",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Synchronization is successfull",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "string",
+                  "example": "Projects synchronization is successful"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Input Parameter"
+          },
+          "401": {
+            "description": "The user is unauthorized to make this request"
+          },
+          "404": {
+            "description": "API not found"
+          }
+        }
+      }
+    },
+    "/settings/sync_tool_users": {
+      "get": {
+        "tags": [
+          "Settings"
+        ],
+        "summary": "Synchronize tool users",
+        "description": "Returns response based on synchronization status",
+        "parameters": [
+          {
+            "name": "application_key",
+            "in": "query",
+            "description": "Application Key of the application",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "tool_category",
+            "in": "query",
+            "description": "Tool Category",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "tool_instance_name",
+            "in": "query",
+            "description": "Tool Name",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Synchronization is successfull",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "string",
+                  "example": "Projects synchronization is successful"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Input Parameter"
+          },
+          "401": {
+            "description": "The user is unauthorized to make this request"
+          },
+          "404": {
+            "description": "API not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/settings/validate_tool": {
+      "post": {
+        "tags": [
+          "Settings"
+        ],
+        "summary": "Validate a new tool",
+        "description": "Validates a new tool based on the input data",
+        "parameters": [
+          {
+            "name": "tool_details",
+            "in": "body",
+            "description": "Tool Input Information",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "application_key": {
+                  "type": "string",
+                  "example": "app1"
+                },
+                "tool_url": {
+                  "type": "string",
+                  "example": "http://3.87.19.19:8081"
+                },
+                "tool_instance_name": {
+                  "type": "string",
+                  "example": "Public Jira"
+                },
+                "tool_category": {
+                  "type": "string",
+                  "example": "Planning"
+                },
+                "tool_name": {
+                  "type": "string",
+                  "example": "JIRA"
+                },
+                "tool_version": {
+                  "type": "string",
+                  "example": "v1"
+                },
+                "proxy_required": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "tool_auth": {
+                  "type": "object",
+                  "properties": {
+                    "auth_type": {
+                      "type": "string",
+                      "example": "Basic"
+                    },
+                    "auth_username": {
+                      "type": "string",
+                      "example": "admin"
+                    },
+                    "auth_password": {
+                      "type": "string",
+                      "example": "admin"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tool Validation is successfull",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "string",
+                  "example": "Tool Validation is successfull"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Input Parameter"
+          },
+          "401": {
+            "description": "The user is unauthorized to make this request"
+          },
+          "404": {
+            "description": "API not found"
+          }
+        }
+      }
+    },
+    "/settings/save_tool": {
+      "post": {
+        "tags": [
+          "Settings"
+        ],
+        "summary": "Validate a new tool",
+        "description": "Validates a new tool based on the input data",
+        "parameters": [
+          {
+            "name": "tool_details",
+            "in": "body",
+            "description": "Tool Input Information",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "application_key": {
+                  "type": "string",
+                  "example": "app1"
+                },
+                "tool_url": {
+                  "type": "string",
+                  "example": "http://3.87.19.19:8081"
+                },
+                "tool_instance_name": {
+                  "type": "string",
+                  "example": "Public Jira"
+                },
+                "tool_category": {
+                  "type": "string",
+                  "example": "Planning"
+                },
+                "tool_name": {
+                  "type": "string",
+                  "example": "JIRA"
+                },
+                "tool_version": {
+                  "type": "string",
+                  "example": "v1"
+                },
+                "proxy_required": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "tool_auth": {
+                  "type": "object",
+                  "properties": {
+                    "auth_type": {
+                      "type": "string",
+                      "example": "Basic"
+                    },
+                    "auth_username": {
+                      "type": "string",
+                      "example": "admin"
+                    },
+                    "auth_password": {
+                      "type": "string",
+                      "example": "dmin"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tool Validation is successfull",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "string",
+                  "example": "Tool Validation is successfull"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Input Parameter"
+          },
+          "401": {
+            "description": "The user is unauthorized to make this request"
+          },
+          "404": {
+            "description": "API not found"
+          }
+        }
+      }
+    },
+    "/login/register_user": {
+      "post": {
+        "tags": [
+          "User Login Register"
+        ],
+        "summary": "Register user in Canvas DevOps portal",
+        "description": "Returns status of user registration",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "user",
+            "description": "User details needed for registration",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user_id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": "10645213",
+                  "description": "PS number of the user"
+                },
+                "user_name": {
+                  "type": "string",
+                  "example": "Darshan Bhojani"
+                },
+                "user_mail": {
+                  "type": "string",
+                  "example": "darshan.bhojani@lntinfotech.com"
+                },
+                "user_password": {
+                  "type": "string",
+                  "example": "qe45WG53"
+                },
+                "security_question": {
+                  "type": "string",
+                  "example": "What is your birth place?"
+                },
+                "security_answer": {
+                  "type": "string",
+                  "example": "Mumbai"
+                },
+                "user_allocation": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "role_name": {
+                        "type": "string",
+                        "description": "Role assigned to the team member",
+                        "enum": [
+                          "Project Manager",
+                          "Developer",
+                          "Scrum Master",
+                          "Architect"
+                        ]
+                      },
+                      "application_name": {
+                        "type": "string"
+                      },
+                      "application_key": {
+                        "type": "string",
+                        "description": "Key of the application assigned in the portal"
+                      },
+                      "isAuthorized": {
+                        "type": "boolean",
+                        "description": "Whether user has edit access"
+                      },
+                      "pipelines": {
+                        "type": "array",
+                        "items": {
+                          "properties": {
+                            "pipeline_name": {
+                              "type": "string"
+                            },
+                            "pipeline_key": {
+                              "type": "string",
+                              "description": "Key of the pipeline assigned in the portal"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "example": [],
+                  "description": "user Allocation always empty array when user is registering"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful registration of user",
+            "schema": {
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "User registration successful"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "If user already exists or error while adding user to database",
+            "schema": {
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "Error while registering user"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login/login_user": {
+      "post": {
+        "tags": [
+          "User Login Register"
+        ],
+        "summary": "Login user in Canvas DevOps portal",
+        "description": "Returns status of user login",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "user",
+            "description": "User info required for login",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user_name": {
+                  "type": "string",
+                  "example": "Darshan Bhojani"
+                },
+                "user_password": {
+                  "type": "string",
+                  "example": "qe45WG53"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful authentication of user",
+            "schema": {
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "User authentication successful"
+                },
+                "no_of_apps": {
+                  "type": "number",
+                  "example": 3
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "User authentication failed",
+            "schema": {
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "User authentication failed"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/home/application_list": {
+      "get": {
+        "tags": [
+          "Home"
+        ],
+        "summary": "Get application list for logged in user",
+        "description": "Returns list of application that user is assigned to",
+        "parameters": [
+          {
+            "name": "user_name",
+            "in": "query",
+            "description": "Logged in user's user name",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of applications",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Application"
+              }
+            }
+          },
+          "500": {
+            "description": "Error while fetching user applications",
+            "schema": {
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "Error while fetching user applications"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/home/add_application": {
+      "post": {
+        "tags": [
+          "Home"
+        ],
+        "summary": "Add application for user",
+        "description": "Returns status of added application",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "application",
+            "description": "Application details",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user_name": {
+                  "type": "string",
+                  "example": "Darshan Bhojani"
+                },
+                "application": {
+                  "type": "object",
+                  "properties": {
+                    "application_name": {
+                      "type": "string",
+                      "example": "Citi Bank"
+                    },
+                    "application_type": {
+                      "type": "string",
+                      "example": "AD"
+                    },
+                    "application_desc": {
+                      "type": "string",
+                      "example": "Application to handle Citi Banks transaction"
+                    },
+                    "project_manager": {
+                      "type": "string",
+                      "example": "Neha Dhondhe"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Status of added application",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "Successfully added application"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "If application already exists or error while adding application to database",
+            "schema": {
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "Error while adding application"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pipeline/onboarding_create/save_initial_pipeline_data": {
+      "post": {
+        "tags": [
+          "Pipelines"
+        ],
+        "summary": "Saves initial pipeline data",
+        "description": "Stores pipeline info to pipelines table and links it with user and application",
+        "parameters": [
+          {
+            "name": "pipeline_details",
+            "in": "body",
+            "description": "Pipeline Detail Information",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user_name": {
+                  "type": "string",
+                  "example": "Darshan Bhojani"
+                },
+                "pipeline_name": {
+                  "type": "string",
+                  "example": "JAVA Darshan Pipe"
+                },
+                "application_key": {
+                  "type": "string",
+                  "example": "RAHULS661agm"
+                },
+                "pipeline_description": {
+                  "type": "string",
+                  "example": "JAVA Pipe"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tool Validation is successfull",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "string",
+                  "example": "PIP5F9SLD2"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Input Parameter"
+          },
+          "401": {
+            "description": "The user is unauthorized to make this request"
+          },
+          "404": {
+            "description": "API not found"
+          },
+          "500": {
+            "description": "Failed to save PipelineInfo",
+            "schema": {
+              "properties": {
+                "data": {
+                  "type": "string",
+                  "example": "Failed to save PipelineInfo for pipeline_name"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pipeline/onboarding_create/onboard_scm": {
+      "post": {
+        "tags": [
+          "Pipelines"
+        ],
+        "summary": "Onboards pipeline to SCM Tool",
+        "description": "Creates a project and Repository in SCM Tool and updates the details in Pipeline table.",
+        "parameters": [
+          {
+            "name": "pipeline_details",
+            "in": "body",
+            "description": "Pipeline Detail Information",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "instance_name": {
+                  "type": "string",
+                  "example": "public bitbucket"
+                },
+                "pipeline_key": {
+                  "type": "string",
+                  "example": "PIP2WXRLXM"
+                },
+                "application_key": {
+                  "type": "string",
+                  "example": "RAHULS661agm"
+                },
+                "tool_name": {
+                  "type": "string",
+                  "example": "Bitbucket"
+                },
+                "pipeline_name": {
+                  "type": "string",
+                  "example": "new test 1"
+                },
+                "project_name": {
+                  "type": "string",
+                  "example": "RAHULS661agm_new test 1"
+                },
+                "repository_name": {
+                  "type": "string",
+                  "example": "new test 1-repo"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project created successfully in Bitbucket",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "string",
+                  "example": "Project created in Bitbucket"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Input Parameter"
+          },
+          "401": {
+            "description": "The user is unauthorized to make this request"
+          },
+          "404": {
+            "description": "API not found"
+          },
+          "500": {
+            "description": "Error while creating project in tool_name",
+            "schema": {
+              "properties": {
+                "data": {
+                  "type": "string",
+                  "example": "Failed to create project in Bitbucket"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pipeline/onboarding_create/onboard_plan": {
+      "post": {
+        "tags": [
+          "Pipelines"
+        ],
+        "summary": "Onboards pipeline to Planning Tool",
+        "description": "Creates a project in Planning Tool and updates the details in Pipeline table.",
+        "parameters": [
+          {
+            "name": "pipeline_details",
+            "in": "body",
+            "description": "Pipeline Detail Information",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "instance_name": {
+                  "type": "string",
+                  "example": "Public Jira"
+                },
+                "pipeline_key": {
+                  "type": "string",
+                  "example": "PIP2WXRLXM"
+                },
+                "application_key": {
+                  "type": "string",
+                  "example": "RAHULS661agm"
+                },
+                "tool_name": {
+                  "type": "string",
+                  "example": "Jira"
+                },
+                "pipeline_name": {
+                  "type": "string",
+                  "example": "new test 1"
+                },
+                "project_name": {
+                  "type": "string",
+                  "example": "RAHULS661agm_new test 1"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project created successfully in Jira",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "string",
+                  "example": "Project created in Jira"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Input Parameter"
+          },
+          "401": {
+            "description": "The user is unauthorized to make this request"
+          },
+          "404": {
+            "description": "API not found"
+          },
+          "500": {
+            "description": "Error while creating project in tool_name",
+            "schema": {
+              "properties": {
+                "data": {
+                  "type": "string",
+                  "example": "Failed to create project in Jira"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pipeline/onboarding_create/onboard_code_quality": {
+      "post": {
+        "tags": [
+          "Pipelines"
+        ],
+        "summary": "Onboards pipeline to Code Quality Tool",
+        "description": "Creates a project in Code Quality Tool and generates sonar-properties file and updates the details in Pipeline table.",
+        "parameters": [
+          {
+            "name": "pipeline_details",
+            "in": "body",
+            "description": "Pipeline Detail Information",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "instance_name": {
+                  "type": "string",
+                  "example": "public sonar"
+                },
+                "pipeline_key": {
+                  "type": "string",
+                  "example": "PIP2WXRLXM"
+                },
+                "application_key": {
+                  "type": "string",
+                  "example": "RAHULS661agm"
+                },
+                "tool_name": {
+                  "type": "string",
+                  "example": "Sonarqube"
+                },
+                "pipeline_name": {
+                  "type": "string",
+                  "example": "new test 1"
+                },
+                "project_name": {
+                  "type": "string",
+                  "example": "RAHULS661agm_new test 1"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project created successfully in Sonarqube",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "string",
+                  "example": "Project created in Sonarqube"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Input Parameter"
+          },
+          "401": {
+            "description": "The user is unauthorized to make this request"
+          },
+          "404": {
+            "description": "API not found"
+          },
+          "500": {
+            "description": "Error while creating project in tool_name",
+            "schema": {
+              "properties": {
+                "data": {
+                  "type": "string",
+                  "example": "Failed to create project in Sonarqube"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pipeline/onboarding_create/onboard_continuous_integration": {
+      "post": {
+        "tags": [
+          "Pipelines"
+        ],
+        "summary": "Onboards pipeline to Continuous Integration Tool",
+        "description": "Creates a job in Continuous Integration Tool and generates Jenkinsfile and updates the details in Pipeline table.",
+        "parameters": [
+          {
+            "name": "pipeline_details",
+            "in": "body",
+            "description": "Pipeline Detail Information",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "instance_name": {
+                  "type": "string",
+                  "example": "Public Jenkins"
+                },
+                "pipeline_key": {
+                  "type": "string",
+                  "example": "PIP2WXRLXM"
+                },
+                "application_key": {
+                  "type": "string",
+                  "example": "RAHULS661agm"
+                },
+                "tool_name": {
+                  "type": "string",
+                  "example": "Jenkins"
+                },
+                "pipeline_name": {
+                  "type": "string",
+                  "example": "new test 1"
+                },
+                "project_name": {
+                  "type": "string",
+                  "example": "RAHULS661agm_new test 1"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Project created successfully in Jenkins",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "string",
+                  "example": "Project created in Jenkins"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Input Parameter"
+          },
+          "401": {
+            "description": "The user is unauthorized to make this request"
+          },
+          "404": {
+            "description": "API not found"
+          },
+          "500": {
+            "description": "Error while creating project in tool_name",
+            "schema": {
+              "properties": {
+                "data": {
+                  "type": "string",
+                  "example": "Failed to create project in Jenkins"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pipeline/template_screen/get_all_templates": {
+      "get": {
+        "tags": [
+          "Templates"
+        ],
+        "summary": "Get all Templates",
+        "description": "Returns templates based on application name",
+        "parameters": [
+          {
+            "name": "application_name",
+            "in": "query",
+            "description": "Application Name of the application",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of Templates",
+            "schema": {
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Template_data"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Input Parameter"
+          },
+          "401": {
+            "description": "The user is unauthorized to make this request"
+          },
+          "404": {
+            "description": "API not found"
+          },
+          "500": {
+            "description": "Error while fetching templates",
+            "schema": {
+              "properties": {
+                "data": {
+                  "type": "string",
+                  "example": "Templates for application_name do not exist"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Users": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "integer",
+          "example": 10645213,
+          "description": "PS number of the user"
+        },
+        "user_name": {
+          "type": "string",
+          "example": "Darshan Bhojani"
+        },
+        "user_mail": {
+          "type": "string",
+          "example": "darshan.bhojani@lntinfotech.com"
+        },
+        "user_password": {
+          "type": "string",
+          "example": "qe45WG53"
+        },
+        "user_allocation": {
+          "type": "array",
+          "items": {
+            "properties": {
+              "role_name": {
+                "type": "string",
+                "description": "Role assigned to the team member",
+                "enum": [
+                  "Project Manager",
+                  "Developer",
+                  "Scrum Master",
+                  "Architect"
+                ],
+                "example": "Developer"
+              },
+              "application_name": {
+                "type": "string",
+                "example": "Genius"
+              },
+              "application_key": {
+                "type": "string",
+                "example": "GENIUSAPP",
+                "description": "Key of the application assigned in the portal"
+              },
+              "isAuthorized": {
+                "type": "boolean",
+                "description": "Whether user has edit access"
+              },
+              "pipelines": {
+                "type": "array",
+                "items": {
+                  "properties": {
+                    "pipeline_name": {
+                      "type": "string",
+                      "example": "Genius Pipeline"
+                    },
+                    "pipeline_key": {
+                      "type": "string",
+                      "example": "GENIUSPIPE",
+                      "description": "Key of the pipeline assigned in the portal"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Application": {
+      "type": "object",
+      "properties": {
+        "application_name": {
+          "type": "string",
+          "example": "Citi Bank"
+        },
+        "application_type": {
+          "type": "string",
+          "example": "AD"
+        },
+        "application_desc": {
+          "type": "string",
+          "example": "Application to handle Citi Banks transaction"
+        },
+        "application_health": {
+          "type": "string",
+          "example": "AT RISK"
+        },
+        "pipelines": {
+          "type": "number",
+          "example": 5,
+          "description": "Number of pipelines in the application"
+        },
+        "created_at": {
+          "type": "string",
+          "example": "August 12, 2020"
+        },
+        "project_manager": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "Rahul Mandhane"
+            },
+            "id": {
+              "type": "number",
+              "example": 10669771
+            }
+          }
+        }
+      }
+    },
+    "Template_data": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "example": "5f43a0961c9cb214e889bbce"
+        },
+        "is_custom": {
+          "type": "boolean",
+          "example": true
+        },
+        "template_name": {
+          "type": "string",
+          "example": "Template Axis 2"
+        },
+        "application_name": {
+          "type": "string",
+          "example": "Application to handle Citi Banks transaction"
+        },
+        "application_key": {
+          "type": "string",
+          "example": "AT RISK"
+        },
+        "created_At": {
+          "type": "string",
+          "example": "24-08-2020",
+          "description": "Number of pipelines in the application"
+        },
+        "plan": {
+          "type": "object",
+          "properties": {
+            "tool_name": {
+              "type": "string",
+              "example": "Jira"
+            },
+            "instance_name": {
+              "type": "number",
+              "example": "Public Jira"
+            },
+            "instance_id": {
+              "type": "string",
+              "example": "5e05d2a027673c020e9bdc73"
+            },
+            "tool_url": {
+              "type": "number",
+              "example": "http://3.87.19.19:8081"
+            }
+          }
+        },
+        "scm": {
+          "type": "object",
+          "properties": {
+            "tool_name": {
+              "type": "string",
+              "example": "Bitbucket"
+            },
+            "instance_name": {
+              "type": "number",
+              "example": "Public Bitbucket"
+            },
+            "instance_id": {
+              "type": "string",
+              "example": "5dd627047fa55a5924396a46"
+            },
+            "tool_url": {
+              "type": "number",
+              "example": "http://3.87.19.19:7990"
+            }
+          }
+        },
+        "code_quality": {
+          "type": "object",
+          "properties": {
+            "tool_name": {
+              "type": "string",
+              "example": "Sonarqube"
+            },
+            "instance_name": {
+              "type": "number",
+              "example": "Public Sonarqube"
+            },
+            "instance_id": {
+              "type": "string",
+              "example": "5dd628167fa55a5924396b24"
+            },
+            "tool_url": {
+              "type": "number",
+              "example": "http://3.230.103.53:9000"
+            }
+          }
+        },
+        "continuous_integration": {
+          "type": "object",
+          "properties": {
+            "tool_name": {
+              "type": "string",
+              "example": "Jenkins"
+            },
+            "instance_name": {
+              "type": "number",
+              "example": "Public Jenkins"
+            },
+            "instance_id": {
+              "type": "string",
+              "example": "5f2427776c4546347c213a8b"
+            },
+            "tool_url": {
+              "type": "number",
+              "example": "http://3.81.19.57:8080"
+            }
+          }
+        }
+      }
+    }
+  }
+}

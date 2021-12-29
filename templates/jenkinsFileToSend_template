@@ -1,0 +1,73 @@
+pipeline{
+    agent any
+    stages {
+        {{#if updateStage}}
+            stage('Checkout') {
+                agent {label 'sonar'}
+                steps {
+                checkout scm
+                }
+            }
+        {{/if}}
+		
+        {{#if codeAnalysisStage}}
+            stage('Code Analysis') {
+                agent{
+                    docker {
+                        image 'sonar-scanner2.8'
+                        label 'sonar'
+                    }
+                }  
+                steps {
+                sh """sonar-scanner -Dsonar.analysis.buildNumber=${env.BUILD_NUMBER}"""
+                    }
+                }
+		{{/if}}
+
+        {{#if buildStage}}
+            stage('Build Docker Image') {
+                agent {label 'sonar'}
+                steps{
+                    sh """docker build --no-cache=true -t {{pipelineName}}:v${env.BUILD_NUMBER} ."""
+                    sh """docker images -q -f dangling=true | xargs --no-run-if-empty docker rmi """
+                }
+            }	
+        {{/if}}
+
+        {{#if deploymentStage}}
+		
+            stage('Deploy') {
+                agent {label 'sonar'}
+                steps {
+                //  sh "/home/support/create_service.sh {{pipelineName}} {{pipelineName}}-img latest 1"
+                    /* script{
+                        if(docker stop {{pipelineName}} || true && docker rm {{buildAgentLabel}} || true){
+                            docker run -itd -p9090:8006 --name={{pipelineName}} {{pipelineName}}-img:${env.BUILD_NUMBER}	
+                        }else{
+                            docker run -itd -p9090:8006 --name={{pipelineName}} {{pipelineName}}-img:${env.BUILD_NUMBER}
+                        } 					
+                    } */
+                    echo "Removing the container if it exists"
+                    sh """/home/ubuntu/check_container.sh {{pipelineName}}"""
+                    echo "Creating new container with the current docker image"
+                    sh """docker run -itd -p9095:8006 --name={{pipelineName}} {{pipelineName}}:v${env.BUILD_NUMBER} """
+                }
+            }
+        {{/if}}
+    }
+	post{
+      failure{
+        sh """curl -d '{"build_url":"${env.BUILD_URL}","pipeline_key":{{projectKey}} ,"build_number":"${env.BUILD_NUMBER}", "project_name":"${env.JOB_NAME}", "build_result":"FAILURE"}' -H 'Content-Type: application/json' -X POST {{jenkinsPostURL}}/api/pipeline/webhook/ci/jenkins"""
+			}
+				success {
+				sh """curl -d '{"build_url":"${env.BUILD_URL}","pipeline_key":{{projectKey}}, "build_number":"${env.BUILD_NUMBER}",  "project_name":"${env.JOB_NAME}","build_result":"SUCCESS"}' -H 'Content-Type: application/json' -X POST {{jenkinsPostURL}}/api/pipeline/webhook/ci/jenkins"""
+				
+			}
+				aborted{
+				sh """curl -d '{"build_url":"${env.BUILD_URL}","pipeline_key":{{projectKey}},  "build_number":"${env.BUILD_NUMBER}","project_name":"${env.JOB_NAME}","build_result":"ABORTED"}' -H 'Content-Type: application/json' -X POST {{jenkinsPostURL}}/api/pipeline/webhook/ci/jenkins""" 
+			}
+			unstable{
+				sh """curl -d '{"build_url":"${env.BUILD_URL}","pipeline_key":{{projectKey}}, "build_number":"${env.BUILD_NUMBER}", "project_name":"${env.JOB_NAME}","build_result":"UNSTABLE"}' -H 'Content-Type: application/json' -X POST {{jenkinsPostURL}}/api/pipeline/webhook/ci/jenkins""" 
+			}
+    }
+}

@@ -1,0 +1,29 @@
+pipeline{
+    agent any
+    stages {
+            stage('Checkout') {
+                agent {label 'sonar'}
+                steps {
+                checkout scm
+                }
+            }
+		
+
+
+    }
+	post{
+      failure{
+        sh """curl -d '{"build_url":"${env.BUILD_URL}","pipeline_key":PIPFGUAUCD ,"build_number":"${env.BUILD_NUMBER}", "project_name":"${env.JOB_NAME}", "build_result":"FAILURE"}' -H 'Content-Type: application/json' -X POST http://86f9-2405-201-6008-105b-e926-d1b7-5eb7-a74e.ngrok.io/api/pipeline/webhook/ci/jenkins"""
+			}
+				success {
+				sh """curl -d '{"build_url":"${env.BUILD_URL}","pipeline_key":PIPFGUAUCD, "build_number":"${env.BUILD_NUMBER}",  "project_name":"${env.JOB_NAME}","build_result":"SUCCESS"}' -H 'Content-Type: application/json' -X POST http://86f9-2405-201-6008-105b-e926-d1b7-5eb7-a74e.ngrok.io/api/pipeline/webhook/ci/jenkins"""
+				
+			}
+				aborted{
+				sh """curl -d '{"build_url":"${env.BUILD_URL}","pipeline_key":PIPFGUAUCD,  "build_number":"${env.BUILD_NUMBER}","project_name":"${env.JOB_NAME}","build_result":"ABORTED"}' -H 'Content-Type: application/json' -X POST http://86f9-2405-201-6008-105b-e926-d1b7-5eb7-a74e.ngrok.io/api/pipeline/webhook/ci/jenkins""" 
+			}
+			unstable{
+				sh """curl -d '{"build_url":"${env.BUILD_URL}","pipeline_key":PIPFGUAUCD, "build_number":"${env.BUILD_NUMBER}", "project_name":"${env.JOB_NAME}","build_result":"UNSTABLE"}' -H 'Content-Type: application/json' -X POST http://86f9-2405-201-6008-105b-e926-d1b7-5eb7-a74e.ngrok.io/api/pipeline/webhook/ci/jenkins""" 
+			}
+    }
+}

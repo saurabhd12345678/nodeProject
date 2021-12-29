@@ -1,0 +1,122 @@
+pipeline {
+    agent none
+    stages{ 
+      {{#if update}} 
+        stage('Update Code') { 
+            agent { label '{{nodename}}' }
+         checkout([$class: 'GitSCM', branches: [[name: '*/{{branchName}}']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CleanBeforeCheckout']], gitTool: 'Default', submoduleCfg: [], userRemoteConfigs: [[credentialsId: '850f825e-b762-4d50-ae7d-8f1ea478d1d6', url: '{{urlName}}']]])
+        } 
+        {{/if}}
+
+        {{#if build}}
+        stage('Build & Unit Test'){
+        	        agent {
+	            docker {
+                    image '{{mavenimage}}' 
+                    label '{{nodename}}' 
+                    args '-v /root/.m2:/root/.m2:rw'
+		        }
+	        }
+		    steps {
+    		    sh "export http_proxy=http://10.101.3.148:3128/"
+                sh "export https_proxy=https://10.101.3.148:3128/"
+                sh "mvn clean install -DproxySet=true -DproxyHost=10.101.3.148 -DproxyPort=3128"
+			}
+            post { 
+                always { 
+                        //junit
+                        junit 'target/surefire-reports/*.xml'
+                }
+            }
+		}
+
+        {{/if}} 
+
+
+        
+       {{#if sonar}}
+       stage('Code Analysis'){
+       agent {
+		    docker {
+            image '{{sonarimage}}'
+            label '{{nodename}}'
+            args '-v /root/.sonar/cache:/root/.sonar/cache:rw'
+		    }
+		}
+		steps {
+				sh "sonar-scanner"
+			}
+		}
+        {{/if}}    
+
+       {{#if testing}}
+       stage('System Testing') {
+        agent {label '{{nodename}}'}
+			steps {
+			      script {
+             def testcon=docker.build('{{testimagename}}').run(['--name={{testcontainername}} -p 8080:8080'])
+			      }
+      		    sh "docker run --privileged --rm --net=host -v /dev/shm:/dev/shm -v ${WORKSPACE}/src/test:/protractor webnicer/protractor-headless protractor-conf.js"
+                sh "docker stop {{testcontainername}}"
+    		    sh "docker rm {{testcontainername}}"
+			}
+		}
+        
+       {{/if}}
+
+{{#if vm}}
+       {{#if artifact}}
+       stage ('Upload Artifacts') { 
+            agent {label '{{nodename}}'}
+	        steps {
+		        script {
+                 def server = Artifactory.newServer url: '{{artifacturl}}', credentialsId: 'artifactory_cred'
+                def uploadSpec = 
+            """
+            {
+            "files": [
+                {
+                    "pattern": "target/(*).war",
+                    "target": "example-repo-local/V1R1/war/"
+                }
+              ]
+            }
+            """
+            def buildInfo = Artifactory.newBuildInfo() 
+            buildInfo.env.capture = true 
+            buildInfo=server.upload(uploadSpec) 
+            server.publishBuildInfo(buildInfo)
+		    }
+	    }		
+    }
+    
+       {{/if}}
+{{/if}}
+
+{{#if deploy}}
+     {{#if vm}}
+    stage('Deploy') {
+    agent {label '{{nodename}}'}
+    steps{
+        script{
+        build job: 'ansible_deployment', parameters:[[$class: 'StringParameterValue', name: 'Application', value: 'angular'], [$class: 'StringParameterValue', name: 'Environment', value: 'staging'], [$class: 'StringParameterValue', name: 'Version', value: 'V1R1']]
+            }
+        }
+     }
+    {{/if}}
+
+
+     {{#if docker}}
+      stage('Deploy') {
+    agent {label '{{nodename}}'}
+    steps{
+        script{
+        docker.build('{{deployimagename}}')
+        build job: 'ansible_docker_deployment', parameters:[[$class: 'StringParameterValue', name: 'Application', value: 'demo'], [$class: 'StringParameterValue', name: 'Environment', value: 'staging'], [$class: 'StringParameterValue', name: 'Version', value: 'V1R3']]
+            }
+        }   
+     }
+     {{/if}}
+{{/if}}
+}
+}

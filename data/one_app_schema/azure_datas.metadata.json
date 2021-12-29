@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"},{"v":{"$numberInt":"2"},"key":{"pipeline_key":{"$numberInt":"1"}},"name":"pipeline_key_1","background":true}],"uuid":"2d1a8ac1785148c3841615f9175127b5","collectionName":"azure_datas"}
