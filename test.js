@@ -17,6 +17,7 @@
 const app = require('./index');
 const should = require('chai').should();
 const request = require('supertest');
+const name ;
 
 describe('test.js', () => {
         describe('GET /', () => {
