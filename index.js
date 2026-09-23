@@ -23,6 +23,7 @@ app.get('/', (req, res) => {
     });
 
 const port = 3000;
+const password=1234567s;
 const server = app.listen(port, () => {
         console.log('listening on port %s.\n', server.address().port);
     });
