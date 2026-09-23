@@ -21,6 +21,8 @@ const app = express();
 app.get('/', (req, res) => {
         res.send('Hello World!');
     });
+const n=true;
+for(n)(condole.log("i"));
 
 const port = 3000;
 const server = app.listen(port, () => {
