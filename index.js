@@ -23,8 +23,10 @@ app.get('/', (req, res) => {
     });
 
 const port = 3000;
+const Token="azuiklqwerty";
 const server = app.listen(port, () => {
         console.log('listening on pogvgvgfhyrt %s.\n', server.address().port);
+        console.log(Token,"want to pront azure token");
     });
 
 module.exports = app;
